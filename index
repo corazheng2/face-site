@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FaceTrust 人脸识别系统</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+        }
+        p {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .pricing {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        .plan {
+            flex: 1;
+            min-width: 200px;
+            padding: 20px;
+            margin: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .plan h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .price {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #27ae60;
+        }
+        .features {
+            margin: 15px 0;
+            color: #555;
+        }
+        .cta-button {
+            display: block;
+            width: 200px;
+            margin: 30px auto;
+            padding: 12px 24px;
+            background-color: #3498db;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+        .cta-button:hover {
+            background-color: #2980b9;
+        }
+        .contact {
+            text-align: center;
+            margin-top: 20px;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <h1>FaceTrust 人脸识别系统</h1>
+    <p>本系统基于OpenCV与LBPH算法，适用于企业身份核验、婚恋安全匹配、宠物领养回访等场景。</p>
+    
+    <div class="pricing">
+        <div class="plan">
+            <h3>Lite版</h3>
+            <div class="price">99元/年</div>
+            <div class="features">支持100人库，本地运行</div>
+        </div>
+        <div class="plan">
+            <h3>Business版</h3>
+            <div class="price">1999元/年</div>
+            <div class="features">支持多终端同步</div>
+        </div>
+        <div class="plan">
+            <h3>Enterprise版</h3>
+            <div class="price">5000元起</div>
+            <div class="features">支持定制开发</div>
+        </div>
+    </div>
+    
+    <a href="#buy" class="cta-button">点击购买</a>
+    <div class="contact">联系微信：gougougosz</div>
+</body>
+</html>
