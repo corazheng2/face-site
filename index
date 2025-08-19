@@ -1,102 +1,428 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FaceTrust 人脸识别系统</title>
+    <title>FaceTrust 人脸识别身份核验系统</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#7c3aed',
+                        secondary: '#ec4899',
+                        accent: '#06b6d4'
+                    },
+                    backgroundImage: {
+                        'gradient-purple': 'linear-gradient(135deg, #1e1b4b 0%, #5b21b6 50%, #1e1b4b 100%)',
+                        'gradient-card': 'linear-gradient(135deg, rgba(30, 27, 75, 0.8) 0%, rgba(91, 33, 182, 0.8) 100%)'
+                    }
+                }
+            }
+        }
+    </script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 20px;
+            font-family: 'Inter', sans-serif;
         }
-        h1 {
-            text-align: center;
-            color: #1a1a1a;
-            margin-bottom: 20px;
+        .btn-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        p {
-            text-align: center;
-            color: #666;
-            margin-bottom: 30px;
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
         }
-        .pricing {
-            display: flex;
-            justify-content: space-between;
-            margin: 30px 0;
-            flex-wrap: wrap;
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .plan {
-            flex: 1;
-            min-width: 200px;
-            padding: 20px;
-            margin: 10px;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            text-align: center;
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         }
-        .plan h3 {
-            margin-top: 0;
-            color: #2c3e50;
-        }
-        .price {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #27ae60;
-        }
-        .features {
-            margin: 15px 0;
-            color: #555;
-        }
-        .cta-button {
-            display: block;
-            width: 200px;
-            margin: 30px auto;
-            padding: 12px 24px;
-            background-color: #3498db;
-            color: white;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 4px;
-            font-size: 1em;
-        }
-        .cta-button:hover {
-            background-color: #2980b9;
-        }
-        .contact {
-            text-align: center;
-            margin-top: 20px;
-            color: #7f8c8d;
-            font-size: 0.9em;
+        .gradient-text {
+            background: linear-gradient(90deg, #a855f7, #ec4899, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
     </style>
 </head>
-<body>
-    <h1>FaceTrust 人脸识别系统</h1>
-    <p>本系统基于OpenCV与LBPH算法，适用于企业身份核验、婚恋安全匹配、宠物领养回访等场景。</p>
-    
-    <div class="pricing">
-        <div class="plan">
-            <h3>Lite版</h3>
-            <div class="price">99元/年</div>
-            <div class="features">支持100人库，本地运行</div>
-        </div>
-        <div class="plan">
-            <h3>Business版</h3>
-            <div class="price">1999元/年</div>
-            <div class="features">支持多终端同步</div>
-        </div>
-        <div class="plan">
-            <h3>Enterprise版</h3>
-            <div class="price">5000元起</div>
-            <div class="features">支持定制开发</div>
-        </div>
+<body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white min-h-screen">
+    <!-- Language Toggle -->
+    <div class="fixed top-6 right-6 z-50">
+        <button id="langToggle" class="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-medium hover:bg-white/30 transition-all duration-300 border border-white/30 flex items-center space-x-2">
+            <span>EN</span>
+        </button>
     </div>
-    
-    <a href="#buy" class="cta-button">点击购买</a>
-    <div class="contact">联系微信：gougougosz</div>
+
+    <!-- Header -->
+    <header class="relative overflow-hidden">
+        <div class="absolute inset-0 bg-black/20"></div>
+        <div class="relative max-w-7xl mx-auto px-6 py-24 sm:py-32 lg:px-8 text-center">
+            <div class="mb-8">
+                <h1 class="text-5xl md:text-7xl font-bold mb-6 gradient-text">
+                    FaceTrust
+                </h1>
+                <p class="text-2xl md:text-3xl mb-4 text-white/90" data-en="Make every face more trustworthy." data-zh="让每一张脸更可信。">
+                    让每一张脸更可信。
+                </p>
+                <p class="text-lg md:text-xl text-white/70 mb-8" data-en="Authenticity protection, trust first — Add a security lock to your choices with AI." data-zh="真实守护，信任先行 —— 用AI为你的选择加一道安全锁。">
+                    真实守护，信任先行 —— 用AI为你的选择加一道安全锁。
+                </p>
+            </div>
+            
+            <div class="w-full max-w-4xl mx-auto">
+                <div class="bg-black/30 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <a href="https://www.youtube.com/watch?v=2KRAMIZ_7lw" target="_blank" rel="noopener noreferrer" class="group bg-gradient-to-br from-purple-600/20 to-cyan-600/20 p-6 rounded-xl hover:from-purple-600/30 hover:to-cyan-600/30 transition-all duration-300 border border-purple-500/30 hover:border-purple-400/50 card-hover">
+                            <div class="flex items-center mb-3">
+                                <div class="w-8 h-8 bg-red-600 rounded-full flex items-center justify-center mr-3">
+                                    <i class="fab fa-youtube text-white text-sm"></i>
+                                </div>
+                                <span class="font-semibold">YouTube</span>
+                            </div>
+                            <p class="text-white/80 text-sm" data-en="FaceTrust Official Demo Video" data-zh="FaceTrust 官方演示视频">
+                                FaceTrust 官方演示视频
+                            </p>
+                        </a>
+                        <a href="https://www.bilibili.com/video/BV1L4uTznED3/?spm_id_from=333.1387.homepage.video_card.click" target="_blank" rel="noopener noreferrer" class="group bg-gradient-to-br from-purple-600/20 to-cyan-600/20 p-6 rounded-xl hover:from-purple-600/30 hover:to-cyan-600/30 transition-all duration-300 border border-purple-500/30 hover:border-purple-400/50 card-hover">
+                            <div class="flex items-center mb-3">
+                                <div class="w-8 h-8 bg-pink-600 rounded-full flex items-center justify-center mr-3">
+                                    <i class="fab fa-bilibili text-white text-sm"></i>
+                                </div>
+                                <span class="font-semibold">Bilibili</span>
+                            </div>
+                            <p class="text-white/80 text-sm" data-en="FaceTrust Technical Deep Dive" data-zh="FaceTrust 技术解析视频">
+                                FaceTrust 技术解析视频
+                            </p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Scenarios -->
+    <section class="py-20 px-6">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-16" data-en="Practical Applications" data-zh="实用场景">
+                实用场景
+            </h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Scenario 1 -->
+                <div class="bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-white/20 hover:border-purple-400/50 transition-all duration-300 card-hover">
+                    <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-heart text-white text-lg"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3" data-en="Romance & Dating Verification" data-zh="婚恋交友身份验证">
+                        婚恋交友身份验证
+                    </h3>
+                    <p class="text-white/70 leading-relaxed" data-en="Ensure authenticity in online dating and prevent identity fraud" data-zh="确保线上交友的真实性，防止虚假身份诈骗">
+                        确保线上交友的真实性，防止虚假身份诈骗
+                    </p>
+                </div>
+
+                <!-- Scenario 2 -->
+                <div class="bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-white/20 hover:border-purple-400/50 transition-all duration-300 card-hover">
+                    <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-child text-white text-lg"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3" data-en="Interactive Parent-Child Toy" data-zh="亲子互动小玩具">
+                        亲子互动小玩具
+                    </h3>
+                    <p class="text-white/70 leading-relaxed" data-en="Smart toys using facial recognition for enhanced bonding" data-zh="通过人脸识别增强亲子互动体验的智能玩具">
+                        通过人脸识别增强亲子互动体验的智能玩具
+                    </p>
+                </div>
+
+                <!-- Scenario 3 -->
+                <div class="bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-white/20 hover:border-purple-400/50 transition-all duration-300 card-hover">
+                    <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-graduation-cap text-white text-lg"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3" data-en="University Thesis Project" data-zh="大学生毕设">
+                        大学生毕设
+                    </h3>
+                    <p class="text-white/70 leading-relaxed" data-en="Complete reference project for CV & AI students" data-zh="为计算机视觉与AI专业学生提供完整项目参考">
+                        为计算机视觉与AI专业学生提供完整项目参考
+                    </p>
+                </div>
+
+                <!-- Scenario 4 -->
+                <div class="bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-white/20 hover:border-purple-400/50 transition-all duration-300 card-hover">
+                    <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-home text-white text-lg"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3" data-en="Rental Tenant Background Check" data-zh="租房租客背景核查">
+                        租房租客背景核查
+                    </h3>
+                    <p class="text-white/70 leading-relaxed" data-en="Help landlords verify tenant identity and reduce risks" data-zh="帮助房东快速核验租客真实身份，降低风险">
+                        帮助房东快速核验租客真实身份，降低风险
+                    </p>
+                </div>
+
+                <!-- Scenario 5 -->
+                <div class="bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-white/20 hover:border-purple-400/50 transition-all duration-300 card-hover">
+                    <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-shopping-cart text-white text-lg"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3" data-en="Second-hand Marketplace Protection" data-zh="二手交易平台防骗">
+                        二手交易平台防骗
+                    </h3>
+                    <p class="text-white/70 leading-relaxed" data-en="Verify identity before transactions to prevent scams" data-zh="在交易前验证对方身份，避免线上诈骗">
+                        在交易前验证对方身份，避免线上诈骗
+                    </p>
+                </div>
+
+                <!-- Scenario 6 -->
+                <div class="bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-white/20 hover:border-purple-400/50 transition-all duration-300 card-hover">
+                    <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center mb-6">
+                        <i class="fas fa-exclamation-triangle text-white text-lg"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3" data-en="Trusted Identity Risk Alert" data-zh="可信身份风险预警">
+                        可信身份风险预警
+                    </h3>
+                    <p class="text-white/70 leading-relaxed" data-en="Monitor identity behavior and alert potential risks" data-zh="实时监测异常身份行为，提前预警潜在风险">
+                        实时监测异常身份行为，提前预警潜在风险
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="py-20 px-6 bg-black/20">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-16" data-en="SaaS Subscription Plans" data-zh="SaaS订阅计划">
+                SaaS订阅计划
+            </h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Lite Plan -->
+                <div class="bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-white/20 hover:border-purple-400/50 transition-all duration-300 card-hover">
+                    <h3 class="text-2xl font-bold mb-2" data-en="Lite" data-zh="Lite版">
+                        Lite版
+                    </h3>
+                    <div class="mb-6">
+                        <div class="text-white/50 line-through text-lg mb-1">
+                            <span data-en="Original " data-zh="原价"></span>299<span data-en=" CNY/year" data-zh="元/年">元/年</span>
+                        </div>
+                        <div class="text-3xl font-bold gradient-text">
+                            199<span data-en=" CNY/year" data-zh="元/年">元/年</span>
+                        </div>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center text-white/80">
+                            <i class="fas fa-check text-green-400 mr-3"></i>
+                            <span data-en="FaceTrust Face Recognition Toolkit.exe" data-zh="FaceTrust人脸识别工具包.exe">FaceTrust人脸识别工具包.exe</span>
+                        </li>
+                        <li class="flex items-center text-white/80">
+                            <i class="fas fa-check text-green-400 mr-3"></i>
+                            <span data-en="Without database" data-zh="不含数据库">不含数据库</span>
+                        </li>
+                        <li class="flex items-center text-white/80">
+                            <i class="fas fa-check text-green-400 mr-3"></i>
+                            <span data-en="User Manual" data-zh="使用说明文档">使用说明文档</span>
+                        </li>
+                    </ul>
+                    <button class="w-full py-3 px-6 rounded-xl font-semibold bg-white/20 hover:bg-white/30 text-white border border-white/30 btn-hover transition-all duration-300">
+                        <span data-en="Subscribe Now" data-zh="立即订阅">立即订阅</span>
+                    </button>
+                </div>
+
+                <!-- Business Plan -->
+                <div class="relative bg-gradient-to-b from-purple-600/20 to-pink-600/20 p-8 rounded-2xl border-2 border-purple-400 shadow-2xl transform scale-105 card-hover">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                        <span class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full text-sm font-semibold">
+                            <span data-en="Recommended" data-zh="推荐">推荐</span>
+                        </span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2" data-en="Business" data-zh="Business版">
+                        Business版
+                    </h3>
+                    <div class="mb-6">
+                        <div class="text-white/50 line-through text-lg mb-1">
+                            <span data-en="Original " data-zh="原价"></span>2999<span data-en=" CNY/year" data-zh="元/年">元/年</span>
+                        </div>
+                        <div class="text-3xl font-bold gradient-text">
+                            1999<span data-en=" CNY/year" data-zh="元/年">元/年</span>
+                        </div>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center text-white/80">
+                            <i class="fas fa-check text-green-400 mr-3"></i>
+                            <span data-en="FaceTrust Face Recognition Toolkit.exe" data-zh="FaceTrust人脸识别工具包.exe">FaceTrust人脸识别工具包.exe</span>
+                        </li>
+                        <li class="flex items-center text-white/80">
+                            <i class="fas fa-check text-green-400 mr-3"></i>
+                            <span data-en="Without database" data-zh="不含数据库">不含数据库</span>
+                        </li>
+                        <li class="flex items-center text-white/80">
+                            <i class="fas fa-check text-green-400 mr-3"></i>
+                            <span data-en="User Manual" data-zh="使用说明文档">使用说明文档</span>
+                        </li>
+                        <li class="flex items-center text-white/80">
+                            <i class="fas fa-check text-green-400 mr-3"></i>
+                            <span data-en="Source Code + Comments" data-zh="代码 + 注释">代码 + 注释</span>
+                        </li>
+                        <li class="flex items-center text-white/80">
+                            <i class="fas fa-check text-green-400 mr-3"></i>
+                            <span data-en="Technical Support" data-zh="技术服务支持">技术服务支持</span>
+                        </li>
+                    </ul>
+                    <button class="w-full py-3 px-6 rounded-xl font-semibold bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white btn-hover transition-all duration-300">
+                        <span data-en="Subscribe Now" data-zh="立即订阅">立即订阅</span>
+                    </button>
+                </div>
+
+                <!-- Enterprise Plan -->
+                <div class="bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-white/20 hover:border-purple-400/50 transition-all duration-300 card-hover">
+                    <h3 class="text-2xl font-bold mb-2" data-en="Enterprise Custom" data-zh="Enterprise定制版">
+                        Enterprise定制版
+                    </h3>
+                    <div class="mb-6">
+                        <div class="text-3xl font-bold gradient-text">
+                            <span data-en="From 5000 CNY" data-zh="5000元起">5000元起</span>
+                        </div>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center text-white/80">
+                            <i class="fas fa-check text-green-400 mr-3"></i>
+                            <span data-en="One-on-one private deployment" data-zh="一对一私有化部署">一对一私有化部署</span>
+                        </li>
+                        <li class="flex items-center text-white/80">
+                            <i class="fas fa-check text-green-400 mr-3"></i>
+                            <span data-en="Database setup" data-zh="数据库搭建">数据库搭建</span>
+                        </li>
+                        <li class="flex items-center text-white/80">
+                            <i class="fas fa-check text-green-400 mr-3"></i>
+                            <span data-en="Multi-device sync" data-zh="多终端同步">多终端同步</span>
+                        </li>
+                        <li class="flex items-center text-white/80">
+                            <i class="fas fa-check text-green-400 mr-3"></i>
+                            <span data-en="NDA signing" data-zh="签署保密协议">签署保密协议</span>
+                        </li>
+                        <li class="flex items-center text-white/80">
+                            <i class="fas fa-check text-green-400 mr-3"></i>
+                            <span data-en="Dedicated technical support" data-zh="专属技术支持">专属技术支持</span>
+                        </li>
+                    </ul>
+                    <button class="w-full py-3 px-6 rounded-xl font-semibold bg-white/20 hover:bg-white/30 text-white border border-white/30 btn-hover transition-all duration-300">
+                        <span data-en="Contact Sales" data-zh="联系销售">联系销售</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="py-20 px-6">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-16" data-en="Contact Us" data-zh="联系我们">
+                联系我们
+            </h2>
+            <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-6" data-en="Contact Information" data-zh="联系方式">
+                            联系方式
+                        </h3>
+                        <div class="space-y-6">
+                            <div>
+                                <p class="text-white/70 text-sm" data-en="WeChat" data-zh="微信">
+                                    微信
+                                </p>
+                                <p class="font-semibold text-lg">gougougosz</p>
+                            </div>
+                            <div>
+                                <p class="text-white/70 text-sm" data-en="Support Email" data-zh="技术支持邮箱">
+                                    技术支持邮箱
+                                </p>
+                                <p class="font-semibold">gougougo2025@163.com</p>
+                            </div>
+                            <div>
+                                <p class="text-white/70 text-sm" data-en="Company Address" data-zh="公司地址">
+                                    公司地址
+                                </p>
+                                <p class="font-semibold text-sm leading-relaxed" data-en="Room 201, Building A, No.1 Qianwan Road, Qianhai-Shenzhen-Hong Kong Cooperation Zone, Shenzhen (Hosted by Qianhai Business Secretarial Co., Ltd.)" data-zh="深圳市前海深港合作区前湾一路1号A栋201室(入驻深圳市前海商务秘书有限公司)">
+                                    深圳市前海深港合作区前湾一路1号A栋201室(入驻深圳市前海商务秘书有限公司)
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold mb-6" data-en="Overseas Users" data-zh="海外用户">
+                            海外用户
+                        </h3>
+                        <div class="space-y-6">
+                            <div>
+                                <p class="text-white/70 text-sm" data-en="YouTube DM" data-zh="YouTube私信">
+                                    YouTube私信
+                                </p>
+                                <a href="https://www.youtube.com/@CORAZHENG2023" target="_blank" rel="noopener noreferrer" class="font-semibold text-purple-300 hover:text-purple-200 transition-colors flex items-center">
+                                    www.youtube.com/@CORAZHENG2023
+                                    <i class="fas fa-external-link-alt ml-2 text-xs"></i>
+                                </a>
+                            </div>
+                            <div class="bg-black/30 p-5 rounded-lg">
+                                <p class="text-sm text-white/80 leading-relaxed" data-en="We offer multilingual support, welcome global developers and enterprises to inquire about collaboration." data-zh="我们提供多语言支持，欢迎全球开发者与企业咨询合作事宜。">
+                                    我们提供多语言支持，欢迎全球开发者与企业咨询合作事宜。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 px-6 border-t border-white/20">
+        <div class="max-w-7xl mx-auto text-center">
+            <div class="flex items-center justify-center mb-4">
+                <h2 class="text-3xl font-bold gradient-text">
+                    FaceTrust
+                </h2>
+            </div>
+            <p class="text-white/60 text-sm mb-4" data-en="© 2025 FaceTrust Identity Verification System. All rights reserved." data-zh="© 2025 FaceTrust 人脸识别身份核验系统. 保留所有权利。">
+                © 2025 FaceTrust 人脸识别身份核验系统. 保留所有权利。
+            </p>
+            <p class="text-white/50 text-xs space-x-4">
+                <span data-en="Privacy Policy" data-zh="隐私政策">隐私政策</span> | 
+                <span data-en="Terms of Service" data-zh="用户协议">用户协议</span> | 
+                <span data-en="Security Statement" data-zh="安全声明">安全声明</span>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Language toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const langToggle = document.getElementById('langToggle');
+            let isEnglish = false;
+            
+            // Function to update text based on language
+            function updateLanguage() {
+                document.querySelectorAll('[data-en][data-zh]').forEach(element => {
+                    element.textContent = isEnglish ? element.getAttribute('data-en') : element.getAttribute('data-zh');
+                });
+                
+                // Update button text
+                const buttonText = langToggle.querySelector('span');
+                buttonText.textContent = isEnglish ? '中文' : 'EN';
+            }
+            
+            // Toggle language on button click
+            langToggle.addEventListener('click', function() {
+                isEnglish = !isEnglish;
+                updateLanguage();
+            });
+            
+            // Initial language setup
+            updateLanguage();
+        });
+    </script>
 </body>
 </html>
